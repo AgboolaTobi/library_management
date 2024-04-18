@@ -13,37 +13,50 @@ from django.conf import settings
 #     pass
 
 
+class Genre(models.Model):
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Book(models.Model):
-    POLITICS = 'P'
-    FINANCE = 'F'
-    ROMANCE = 'R'
-    BOOK_CHOICES = [
-        # by using the capital letters, we're saying the values are fixed
-        (POLITICS, 'Politics'),
-        (FINANCE, 'Finance'),
-        (ROMANCE, 'Romance')
-    ]
+    # POLITICS = 'P'
+    # FINANCE = 'F'
+    # ROMANCE = 'R'
+    # BOOK_CHOICES = [
+    #     # by using the capital letters, we're saying the values are fixed
+    #     (POLITICS, 'Politics'),
+    #     (FINANCE, 'Finance'),
+    #     (ROMANCE, 'Romance')
+    # ]
     title = models.CharField(max_length=255)
     author = models.ForeignKey('Author', on_delete=models.CASCADE)
     summary = models.TextField()
-    isbn = models.CharField(max_length=10)
-    genre = models.CharField(max_length=1, choices=BOOK_CHOICES, default=FINANCE)
+    isbn = models.CharField(max_length=13)
+    genre = models.ManyToManyField('Genre')
+
+    # genre = models.CharField(max_length=1, choices=BOOK_CHOICES, default=FINANCE)
     # ForeignKey is used to denote OnetoMany
 
     # We can remove the author from the string when we move the author class above the book class.
     # i.e. when we declare the author class before the book class
 
     def __str__(self):
-        return f"{self.title} {self.isbn}"
+        return f"{self.author}{self.title} {self.isbn}"
+
+    def list_genre(self):
+        return ", ".join(genre.name for genre in self.genre.all()[:2])
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, blank=True, default="", help_text="Enter your name...")
+    last_name = models.CharField(max_length=255)
     date_of_birth = models.DateField(null=True, blank=True)
     date_of_death = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.first_name}{self.last_name}{self.date_of_birth}{self.date_of_death}"
 
 
 class Language(models.Model):
@@ -68,4 +81,4 @@ class BookInStance(models.Model):
     borrower = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
 
     def __str__(self):
-        return f"{self.LOAN_STATUS}"
+        return f"{self.status} {self.due_back}"
