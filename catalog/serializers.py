@@ -1,12 +1,20 @@
 from rest_framework import serializers
 
-from catalog.models import Book, Author
+from catalog.models import Book, Author, Genre
+
+
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Genre
+        fields = ['name']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ['first_name', 'last_name', 'date_of_birth']
+
 
 #
 # class BookSerializer(serializers.ModelSerializer):

@@ -30,6 +30,7 @@ class Book(models.Model):
     #     (FINANCE, 'Finance'),
     #     (ROMANCE, 'Romance')
     # ]
+
     title = models.CharField(max_length=255)
     author = models.ForeignKey('Author', on_delete=models.CASCADE)
     summary = models.TextField()

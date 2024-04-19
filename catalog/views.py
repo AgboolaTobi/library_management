@@ -4,11 +4,42 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Book, Author
-from .serializers import AuthorSerializer, BookSerializer
+from .models import Book, Author, Genre
+from .serializers import AuthorSerializer, BookSerializer, GenreSerializer
 
 
 # Create your views here.
+
+
+@api_view(['GET', 'POST'])
+def genre_list(request):
+    if request.method == 'GET':
+        genres = Genre.objects.all()
+        serializer = GenreSerializer(genres, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        serializer = GenreSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET", "PUT", "DELETE"])
+def genre_details(request, pk):
+    genre = get_object_or_404(Genre, id=pk)
+    if request.method == "GET":
+        serializer = GenreSerializer(genre)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == "PUT":
+        serializer = GenreSerializer(genre)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == "DELETE":
+        genre.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
