@@ -1,8 +1,8 @@
 from uuid import uuid4
 
-from django.db import models
-
 from django.conf import settings
+from django.db import models
+from django.db.models import CASCADE
 
 
 # Create your models here.
@@ -50,6 +50,11 @@ class Book(models.Model):
         return ", ".join(genre.name for genre in self.genre.all()[:2])
 
 
+class BookImage(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_images')
+    image = models.ImageField(upload_to='')
+
+
 class Author(models.Model):
     first_name = models.CharField(max_length=255, blank=True, default="", help_text="Enter your name...")
     last_name = models.CharField(max_length=255)
@@ -65,6 +70,16 @@ class Language(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Review(models.Model):
+    name_of_reviewer = models.CharField(max_length=255, default="")
+    book = models.ForeignKey(Book, on_delete=CASCADE, default="")
+    comment = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name_of_reviewer} {self.comment}"
 
 
 class BookInStance(models.Model):
