@@ -54,6 +54,9 @@ class BookImage(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_images')
     image = models.ImageField(upload_to='')
 
+    def __str__(self):
+        return f"{self.book} {self.image}"
+
 
 class Author(models.Model):
     first_name = models.CharField(max_length=255, blank=True, default="", help_text="Enter your name...")

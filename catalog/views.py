@@ -10,10 +10,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Book, Author, Genre, Review
+from .models import Book, Author, Genre, Review, BookImage
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly
-from .serializers import AuthorSerializer, BookSerializer, GenreSerializer, ReviewSerializer
+from .serializers import AuthorSerializer, BookSerializer, GenreSerializer, ReviewSerializer, ImageSerializer
 
 
 # Create your views here.
@@ -73,6 +73,17 @@ class ReviewViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         return {'book_pk': self.kwargs['book_id']}
+
+
+class ImageViewSet(ModelViewSet):
+    # queryset = BookImage.objects.all()
+    # serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        return BookImage.objects.filter(book_id=self.kwargs['books_pk'])
+
+    def get_serializer_class(self):
+        return ImageSerializer
 
 
 #

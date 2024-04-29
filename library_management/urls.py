@@ -15,10 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import djoser
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import urls
 from django.urls import path, include
-
+from django.conf import settings
 
 admin.site.site_header = 'Librarian Panel'
 admin.site.index_title = 'Librarian administration'
@@ -32,3 +33,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
