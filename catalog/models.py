@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models import CASCADE
 
+from catalog.validators import validate_file_size
+
 
 # Create your models here.
 
@@ -52,7 +54,7 @@ class Book(models.Model):
 
 class BookImage(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='book_images')
-    image = models.ImageField(upload_to='')
+    image = models.ImageField(upload_to='catalog/media', validators=[validate_file_size])
 
     def __str__(self):
         return f"{self.book} {self.image}"
