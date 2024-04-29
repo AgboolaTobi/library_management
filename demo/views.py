@@ -1,4 +1,4 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.shortcuts import render
 from django.http import HttpResponse
 
@@ -8,6 +8,9 @@ from django.http import HttpResponse
 def greet(request):
     subject = "Hi user"
     message = "this mail was sent using django"
+    email_message = EmailMessage(subject=subject, body=message, from_email='info@librarian.com',to=['toby@librarian.com'])
+    email_message.attach_file('')
+    email_message.send()
     send_mail(subject, message,
               'info@librarian.com',
               ['toby@librarian.com'])
